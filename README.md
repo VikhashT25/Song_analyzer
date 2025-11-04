@@ -124,8 +124,7 @@ Open your browser and Go to,
 **Author :**
 
 Developed by: Vikhash .T
-📬 For feedback or suggestions — feel free to reach out!
-        
+📬 For feedback or suggestions — feel free to reach out at,
         https://vikhash-portfolio.vercel.app/#edu
 
 **License :**
