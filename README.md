@@ -59,30 +59,6 @@
 
 
 
-**Tech Stack :**
-
-
-_____________________________________________________________
-| Component             | Technology                        |
-|                       |                                   |
-|_______________________|___________________________________|
-|                       |                                   |
-| \*\*Backend\*\*       | Flask (Python)                    |
-|                       |                                   |
-| \*\*Spotify API\*\*   | Spotipy (Spotify Web API wrapper) |
-|                       |                                   |
-| \*\*Frontend\*\*      | HTML5, CSS3, Bootstrap 5          |
-|                       |                                   |
-| \*\*Visualization\*\* | Matplotlib                        |
-|                       |                                   |
-| \*\*Data Handling\*\* | Pandas, NumPy                     |
-|                       |                                   |
-| \*\*Other Tools\*\*   | UUID for unique graph naming      |
-|_______________________|___________________________________|
-
-
-
-
 **Folder Structure :**
 
 
