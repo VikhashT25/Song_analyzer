@@ -62,39 +62,25 @@
 **Folder Structure :**
 
 
-📂 Spotify\_Analyzer\_Chatbot/
-
-├── app.py                         # Flask main app
-|
-├── spotify_analyser.py            # Spotify data processing logic
-|
-├── requirements.txt               # Dependencies list
-|
+Song_Analyzer
+│
+├── app.py
+├── spotify_analyser.py
+├── requirements.txt
+│
 ├── static/
-|
-│       ├── style.css                  # Custom CSS for chat UI
-|       |
-│       ├── graphs/                    # Generated graph images
-|       |       |
-│       |       └──> Graph_data        # Stores graph data
-|       |   
-|       ├── images/
-|       |       |    
-|       |       └──> SoundWaves         # Loading animation
-|       |
-|       └──>  downloads/
-|               |
-|               └──> Tables_data       # Stores table CSV data
-|
-|
-├── music/                              # your virtual environment name & data
-|
-├── README/                             # Detailed Manual
-|
+│     ├── style.css
+│     ├── graphs/
+│     │     └── Graph_data
+│     ├── images/
+│     │     └── SoundWaves
+│     └── downloads/
+│           └── Tables_data
+│
+├── README/
+│
 └── templates/
-       |
-       └──> index.html                  # Frontend interface
-
+      └── index.html
 
 
 **Installation & Setup :**
