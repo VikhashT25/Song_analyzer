@@ -1,6 +1,9 @@
-# Song_analyzer
+`Song_analyzer`
+
+      > A web-based Flask app that analyzes Spotify tracks and albums.  
+      > It retrieves information such as track name, artist, album, and popularity.
+
   
-    A web-based Flask app that analyzes Spotify tracks and albums. It retrieves information such as track name, artist, album, popularity, and duration, and displays it through interactive charts.
 
 **Spotify Analyzer Chatbot (Flask + Matplotlib) :**
 
@@ -62,25 +65,8 @@
 **Folder Structure :**
 
 
-Song_Analyzer
-│
-├── app.py
-├── spotify_analyser.py
-├── requirements.txt
-│
-├── static/
-│     ├── style.css
-│     ├── graphs/
-│     │     └── Graph_data
-│     ├── images/
-│     │     └── SoundWaves
-│     └── downloads/
-│           └── Tables_data
-│
-├── README/
-│
-└── templates/
-      └── index.html
+<img width="845" height="457" alt="folder-contents (1)" src="https://github.com/user-attachments/assets/b573f81a-7f60-446a-9830-2170ec88365f" />
+
 
 
 **Installation & Setup :**
@@ -124,7 +110,7 @@ Open your browser and Go to,
 **Author :**
 
 Developed by: Vikhash .T
-📬 For feedback or suggestions — feel free to reach out!
+📬 For feedback or suggestions — feel free to reach out at, https://vikhash-portfolio.vercel.app/#edu
 
 **License :**
 
