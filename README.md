@@ -65,25 +65,8 @@
 **Folder Structure :**
 
 
-Song_Analyzer
-│
-├── app.py
-├── spotify_analyser.py
-├── requirements.txt
-│
-├── static/
-│     ├── style.css
-│     ├── graphs/
-│     │     └── Graph_data
-│     ├── images/
-│     │     └── SoundWaves
-│     └── downloads/
-│           └── Tables_data
-│
-├── README/
-│
-└── templates/
-      └── index.html
+<img width="845" height="457" alt="folder-contents (1)" src="https://github.com/user-attachments/assets/b573f81a-7f60-446a-9830-2170ec88365f" />
+
 
 
 **Installation & Setup :**
