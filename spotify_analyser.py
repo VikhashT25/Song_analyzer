@@ -1,21 +1,29 @@
+import os
+import pandas as pd
+from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import pandas as pd
-import os
 
-# ✅ Securely load your Spotify API credentials from environment variables
+import os
+print("VERCEL_BLOB_READ_WRITE_TOKEN:", bool(os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")))
+
+
+# ✅ Load environment variables from .env file
+load_dotenv()
+
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
+print("CLIENT_ID loaded:", bool(SPOTIFY_CLIENT_ID))
+
+# ✅ Initialize Spotify API client
 if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
     raise ValueError("Missing Spotify API credentials. Please set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.")
 
-# ✅ Initialize Spotify client
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
     client_id=SPOTIFY_CLIENT_ID,
     client_secret=SPOTIFY_CLIENT_SECRET
 ))
-
 
 # =====================================================
 # 🎵 Function: Analyze a single track URL
