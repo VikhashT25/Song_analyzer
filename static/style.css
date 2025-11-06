@@ -250,14 +250,14 @@ button.btn-success:hover {
 }
 
 .right-aside{
-        width: 200px;
+        width: 100px;
         box-shadow: whitesmoke;
         border-radius: 15px;
         background-color: #1e1e1e;
         padding: 10px;
         margin: 10px;
         float: right;
-        height: 600px;
+        height: 300px;
         box-shadow: 0 0 5px 3px rgb(0, 150, 10);
         display: flex;
         padding: 1.1rem 0;
