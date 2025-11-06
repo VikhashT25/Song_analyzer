@@ -9,8 +9,12 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 # Load credentials from environment variables
 
-SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
-SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+
+# Initialize Spotify API client
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+    client_id="c05b3a89aa2b4830a5e7e618830a7ed6",
+    client_secret="f694c42ae8a94d27ae6f6aed07870163"
+))
 
 # ✅ Function 1: Analyze a single Spotify track
 def analyze_spotify_url(track_url):
