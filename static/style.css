@@ -171,7 +171,7 @@ button.btn-success:hover {
   display: inline-block;
   padding: 8px 14px;
   font-size: 14px;
-  color: #00c853; /* Bright green text */
+  color: white;
   border: 1px solid #00c853;
   border-radius: 8px;
   text-decoration: none;
