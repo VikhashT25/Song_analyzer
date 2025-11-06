@@ -41,11 +41,8 @@ def chat():
         # ✅ Convert to HTML table
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
         csv_filename = f"{uuid.uuid4().hex}.csv"
-        csv_path = os.path.join(app.config['DOWNLOAD_FOLDER'], csv_filename)
-       
-            # Save CSV
-        os.makedirs(app.config['DOWNLOAD_FOLDER'], exist_ok=True)
-        df.to_csv(csv_path, index=False)
+        csv_path = f"static/downloads/{filename}.csv"
+        df.to_csv(csv_path, index=False)ex=False)
         
 
         # ✅ Generate graph
