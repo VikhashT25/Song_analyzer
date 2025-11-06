@@ -1,21 +1,49 @@
-# app.py
 from flask import Flask, render_template, request, jsonify
 import os
 import uuid
+import io
+import requests
 import matplotlib
 import matplotlib.pyplot as plt
-from spotify_analyser import analyze_spotify_url, analyze_spotify_album
 import numpy as np
+from spotify_analyser import analyze_spotify_url, analyze_spotify_album
 
+# Configure Flask
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/graphs'
-app.config['DOWNLOAD_FOLDER'] = 'static/downloads'
+
+# Use non-interactive backend for Matplotlib
+matplotlib.use('Agg')
+
+
+# ==========================
+# 🎯 Upload helper functions
+# ==========================
+
+def upload_to_vercel_blob(filename, content_bytes, content_type="text/csv"):
+    """Uploads a file (CSV or PNG) to Vercel Blob Storage and returns its public URL."""
+    blob_url = "https://api.vercel.com/v2/blob"
+    token = os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
+
+    if not token:
+        raise ValueError("Missing VERCEL_BLOB_READ_WRITE_TOKEN environment variable.")
+
+    headers = {"Authorization": f"Bearer {token}"}
+    files = {"file": (filename, content_bytes, content_type)}
+
+    response = requests.post(blob_url, headers=headers, files=files)
+    response.raise_for_status()
+    return response.json()["url"]
+
+
+# ==========================
+# 🧠 Main Routes
+# ==========================
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-matplotlib.use('Agg')
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -40,20 +68,23 @@ def chat():
 
         # ✅ Convert to HTML table
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
+
+        # ==========================
+        # 📊 Upload CSV to Blob
+        # ==========================
         csv_filename = f"{uuid.uuid4().hex}.csv"
-        csv_path = os.path.join(app.config['DOWNLOAD_FOLDER'], csv_filename)
-       
-            # Save CSV
-        os.makedirs(app.config['DOWNLOAD_FOLDER'], exist_ok=True)
-        df.to_csv(csv_path, index=False)
-        
+        csv_bytes = io.BytesIO()
+        df.to_csv(csv_bytes, index=False)
+        csv_bytes.seek(0)
+        csv_url = upload_to_vercel_blob(csv_filename, csv_bytes, "text/csv")
 
-        # ✅ Generate graph
+        # ==========================
+        # 📈 Generate Graph
+        # ==========================
         graph_filename = f"{uuid.uuid4().hex}.png"
-        graph_path = os.path.join(app.config['UPLOAD_FOLDER'], graph_filename)
+        graph_bytes = io.BytesIO()
 
-        # Dynamic resizing based on number of tracks
-        width = max(11, len(df) * 0.8)  # Minimum width 8, adds 0.8 per track
+        width = max(11, len(df) * 0.8)
         height = 10
         plt.figure(figsize=(width, height))
 
@@ -62,37 +93,32 @@ def chat():
         duration = df['Duration (minutes)']
 
         x = np.arange(len(labels))
-        width = 0.35
+        bar_width = 0.35
         gap = 0.1
 
-        plt.bar(x - width/2 - gap/2, popularity, width=width, label='Popularity')
-        plt.bar(x + width/2 + gap/2, duration, width=width, label='Duration (minutes)')
-
-        plt.title(graph_title, fontsize=20, fontweight='bold')
+        plt.bar(x - bar_width/2 - gap/2, popularity, width=bar_width, label='Popularity')
+        plt.bar(x + bar_width/2 + gap/2, duration, width=bar_width, label='Duration (minutes)')
+        plt.title(graph_title, fontsize=18, fontweight='bold')
         plt.xticks(ticks=x, labels=labels, rotation=45, ha='right')
         plt.tight_layout()
         plt.legend()
-        plt.savefig(graph_path)
+        plt.savefig(graph_bytes, format='png')
         plt.close()
 
-        # ✅ Return response
+        graph_bytes.seek(0)
+        graph_url = upload_to_vercel_blob(graph_filename, graph_bytes, "image/png")
+
+        # ✅ Return JSON Response
         return jsonify({
             "type": "spotify_analysis",
             "table": table_html,
-            "download_csv": f"/static/downloads/{csv_filename}",
-            "graph_url": f"/static/graphs/{graph_filename}"
+            "download_csv": csv_url,
+            "graph_url": graph_url
         })
 
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@app.route('/download/<filename>')
-def download_file(filename):
-    """Serve CSV downloads."""
-    return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
-
-
 
 if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
