@@ -1,29 +1,31 @@
-import os
-import re
 import spotipy
-import pandas as pd
 from spotipy.oauth2 import SpotifyClientCredentials
+import pandas as pd
+import os
 
-# --- Spotify API Setup ---
-# Option 1: Directly include credentials (for local testing only)
+# ✅ Securely load your Spotify API credentials from environment variables
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
-# Load credentials from environment variables
+if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
+    raise ValueError("Missing Spotify API credentials. Please set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.")
 
-
-# Initialize Spotify API client
+# ✅ Initialize Spotify client
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
-    client_id="c05b3a89aa2b4830a5e7e618830a7ed6",
-    client_secret="f694c42ae8a94d27ae6f6aed07870163"
+    client_id=SPOTIFY_CLIENT_ID,
+    client_secret=SPOTIFY_CLIENT_SECRET
 ))
 
-# ✅ Function 1: Analyze a single Spotify track
+
+# =====================================================
+# 🎵 Function: Analyze a single track URL
+# =====================================================
 def analyze_spotify_url(track_url):
+    """Analyzes a single Spotify track and returns a pandas DataFrame."""
     try:
-        # Extract track ID from URL
-        track_id = re.search(r'track/([a-zA-Z0-9]+)', track_url).group(1)
+        track_id = track_url.split("/")[-1].split("?")[0]
         track = sp.track(track_id)
 
-        # Extract details
         track_data = {
             'Track Name': [track['name']],
             'Artist': [track['artists'][0]['name']],
@@ -32,37 +34,34 @@ def analyze_spotify_url(track_url):
             'Duration (minutes)': [round(track['duration_ms'] / 60000, 2)]
         }
 
-        df = pd.DataFrame(track_data)
-        return df
+        return pd.DataFrame(track_data)
 
     except Exception as e:
-        raise Exception(f"Error analyzing track: {e}")
+        raise Exception(f"Error analyzing track: {str(e)}")
 
-# ✅ Function 2: Analyze an entire album
+
+# =====================================================
+# 💿 Function: Analyze an album URL
+# =====================================================
 def analyze_spotify_album(album_url):
+    """Analyzes all tracks in a Spotify album and returns a pandas DataFrame."""
     try:
-        # Extract album ID
-        album_id = re.search(r'album/([a-zA-Z0-9]+)', album_url).group(1)
+        album_id = album_url.split("/")[-1].split("?")[0]
         album = sp.album(album_id)
         tracks = sp.album_tracks(album_id)
 
-        album_name = album['name']
-        artist_name = album['artists'][0]['name']
-
-        data = []
+        track_data = []
         for track in tracks['items']:
-            details = sp.track(track['id'])
-            data.append({
-                'Track Name': details['name'],
-                'Artist': artist_name,
-                'Album': album_name,
-                'Popularity': details['popularity'],
-                'Duration (minutes)': round(details['duration_ms'] / 60000, 2)
+            track_info = sp.track(track['id'])
+            track_data.append({
+                'Track Name': track_info['name'],
+                'Artist': track_info['artists'][0]['name'],
+                'Album': album['name'],
+                'Popularity': track_info['popularity'],
+                'Duration (minutes)': round(track_info['duration_ms'] / 60000, 2)
             })
 
-        df = pd.DataFrame(data)
-        return df
+        return pd.DataFrame(track_data)
 
     except Exception as e:
-        raise Exception(f"Error analyzing album: {e}")
-    
+        raise Exception(f"Error analyzing album: {str(e)}")
