@@ -96,37 +96,38 @@ button.btn-success:hover {
 
 /* Spotify Table Styling */
 .table-container {
-  justify-content: center;
-  align-items: center;
+  display: block;
   width: 100%;
   max-width: 760px;
   margin-top: 20px;
   margin-bottom: 20px;
-  overflow: hidden;
-  border-collapse: collapse;
-  text-align: center;
+  overflow-x: auto; /* enables horizontal scroll */
   background-color: #1e1e1e;
   color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 0.5rem;
 }
 
-.table-container thead {
-  background-color: #1DB954; /* Spotify Green */
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 10px;
+.table-container table {
+  width: 100%;
+  min-width: 600px; /* if you have lots of columns, increase this */
+  border-collapse: collapse;
+  margin: 0;
 }
 
-.table-container th, .table-container td {
+.table-container th,
+.table-container td {
   padding: 10px 12px;
   text-align: center;
   border-bottom: 1px solid #333;
 }
 
-.table-container tbody tr:hover {
-  background-color: #2a2a2a;
-  transition: 0.3s ease;
+.table-container thead {
+  background-color: #1DB954;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .table-bordered {
@@ -143,6 +144,26 @@ button.btn-success:hover {
 
 .table-container td:first-child {
   font-weight: bold;
+}
+
+.table-container tbody tr:hover {
+  background-color: #2a2a2a;
+  transition: 0.3s ease;
+}
+
+/* Responsive for mobile screens */
+@media (max-width: 767px) {
+  .table-container {
+    max-width: 100%;
+    padding: 0.3rem;
+  }
+  .chat-box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .left-aside, .right-aside {
+    display: none !important;
+  }
 }
 
 /* Spotify Download Button */
