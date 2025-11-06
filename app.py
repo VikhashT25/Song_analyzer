@@ -73,6 +73,7 @@ def chat():
         # 📊 Upload CSV to Blob
         # ==========================
         csv_filename = f"{uuid.uuid4().hex}.csv"
+
         csv_bytes = io.BytesIO()
         df.to_csv(csv_bytes, index=False)
         csv_bytes.seek(0)
