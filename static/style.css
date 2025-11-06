@@ -96,38 +96,37 @@ button.btn-success:hover {
 
 /* Spotify Table Styling */
 .table-container {
-  display: block;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   max-width: 760px;
   margin-top: 20px;
   margin-bottom: 20px;
-  overflow-x: auto; /* enables horizontal scroll */
+  overflow: hidden;
+  border-collapse: collapse;
+  text-align: center;
   background-color: #1e1e1e;
   color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
-  padding: 0.5rem;
 }
 
-.table-container table {
-  width: 100%;
-  min-width: 600px; /* if you have lots of columns, increase this */
-  border-collapse: collapse;
-  margin: 0;
+.table-container thead {
+  background-color: #1DB954; /* Spotify Green */
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px;
 }
 
-.table-container th,
-.table-container td {
+.table-container th, .table-container td {
   padding: 10px 12px;
   text-align: center;
   border-bottom: 1px solid #333;
 }
 
-.table-container thead {
-  background-color: #1DB954;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.table-container tbody tr:hover {
+  background-color: #2a2a2a;
+  transition: 0.3s ease;
 }
 
 .table-bordered {
@@ -146,32 +145,12 @@ button.btn-success:hover {
   font-weight: bold;
 }
 
-.table-container tbody tr:hover {
-  background-color: #2a2a2a;
-  transition: 0.3s ease;
-}
-
-/* Responsive for mobile screens */
-@media (max-width: 767px) {
-  .table-container {
-    max-width: 100%;
-    padding: 0.3rem;
-  }
-  .chat-box {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .left-aside, .right-aside {
-    display: none !important;
-  }
-}
-
 /* Spotify Download Button */
 .btn-outline-info.btn-sm {
   display: inline-block;
   padding: 8px 14px;
   font-size: 14px;
-  color: white;
+  color: #00c853; /* Bright green text */
   border: 1px solid #00c853;
   border-radius: 8px;
   text-decoration: none;
@@ -268,7 +247,6 @@ button.btn-success:hover {
 .left-aside img{  
   padding-top: 200px;
   padding-bottom: 200px;
-  color: #1e1e1e;
 }
 
 .right-aside{
@@ -322,9 +300,6 @@ button.btn-success:hover {
     display: none !important;
   }
 }
-
-
-
 
 
 
