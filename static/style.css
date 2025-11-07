@@ -251,14 +251,14 @@ button.btn-success:hover {
 /* Side containers */
 
 .left-aside{
-        width: 200px;
+        width: 150px;
         box-shadow: whitesmoke;
         border-radius: 15px;
         background-color: #1e1e1e;
         padding-top: 10px;
         margin: 10px;
         float: left;
-        height: 600px;
+        height: 300px;
         box-shadow: 0 0 5px 3px rgb(0, 150, 10);
         display: flex;
         padding: 1.1rem 0;
@@ -268,19 +268,19 @@ button.btn-success:hover {
 }
 
 .left-aside img{  
-  padding-top: 200px;
-  padding-bottom: 200px;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 .right-aside{
-        width: 200px;
+        width: 150px;
         box-shadow: whitesmoke;
         border-radius: 15px;
         background-color: #1e1e1e;
         padding: 10px;
         margin: 10px;
         float: right;
-        height: 600px;
+        height: 300px;
         box-shadow: 0 0 5px 3px rgb(0, 150, 10);
         display: flex;
         padding: 1.1rem 0;
@@ -290,15 +290,15 @@ button.btn-success:hover {
 }
 
 .right-aside img{  
-  padding-top: 200px;
-  padding-bottom: 200px;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 
 /* Bootstrap compatibility adjustments */
 .left-aside img,
 .right-aside img {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
 }
 
