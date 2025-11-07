@@ -4,7 +4,7 @@ import httpx
 import base64
 import asyncio
 
-VERCEL_BLOB_URL = "https://blob.vercel-storage.com"
+VERCEL_BLOB_URL = "https://fbgruph4dru1oifl.public.blob.vercel-storage.com"
 VERCEL_TOKEN = os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
 
 
