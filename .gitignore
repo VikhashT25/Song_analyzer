@@ -1,3 +1,4 @@
 SPOTIFY_CLIENT_ID="c05b3a89aa2b4830a5e7e618830a7ed6"
 SPOTIFY_CLIENT_SECRET="f694c42ae8a94d27ae6f6aed07870163"
 VERCEL_BLOB_READ_WRITE_TOKEN="vercel_blob_rw_FBGRUPH4dru1OiFl_KSYSeGnajKDumgbQ7OO8SXXF9cjACv"
+VERCEL_BLOB_URL = "https://fbgruph4dru1oifl.public.blob.vercel-storage.com"

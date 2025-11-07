@@ -3,7 +3,7 @@ import httpx
 import asyncio
 
 VERCEL_BLOB_URL = "https://fbgruph4dru1oifl.public.blob.vercel-storage.com"
-VERCEL_TOKEN = os.getenv("VERCEL_BLOB_READ_WRITE_TOKEN")
+VERCEL_TOKEN = os.getenv("vercel_blob_rw_FBGRUPH4dru1OiFl_KSYSeGnajKDumgbQ7OO8SXXF9cjACv")
 
 async def put(path: str, data, content_type: str, access: str = "public"):
     """
