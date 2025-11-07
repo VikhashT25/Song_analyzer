@@ -1,3 +1,4 @@
+# app.py
 import os
 import uuid
 import io
@@ -6,7 +7,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, jsonify
 from spotify_analyser import analyze_spotify_url, analyze_spotify_album
-from vercel_blob import put  # ✅ You’ll create this helper (shown below)
+from vercel_blob import put
 import asyncio
 import pandas as pd
 
@@ -14,25 +15,22 @@ matplotlib.use('Agg')
 
 app = Flask(__name__)
 
-# ✅ ROUTE: Homepage
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-# ✅ ROUTE: Spotify Analyzer
 @app.route('/chat', methods=['POST'])
 def chat():
     user_input = request.json.get('message', '').strip()
-    
 
     try:
-        # --- 🎵 Track URL ---
+        # 🎵 Track URL
         if "spotify.com/track" in user_input:
             df = analyze_spotify_url(user_input)
             graph_title = "Spotify Track Metrics"
 
-        # --- 💿 Album URL ---
+        # 💿 Album URL
         elif "spotify.com/album" in user_input:
             df = analyze_spotify_album(user_input)
             graph_title = "Spotify Album Metrics"
@@ -40,16 +38,15 @@ def chat():
         else:
             return jsonify({
                 "type": "text",
-                "message": "Please send a Spotify track or album URL."
+                "message": "Please send a valid Spotify track or album URL."
             })
-            
 
-        # ✅ Convert DataFrame to CSV (in-memory)
+        # ✅ Convert to CSV (bytes)
         csv_buffer = io.StringIO()
         df.to_csv(csv_buffer, index=False)
-        csv_buffer.seek(0)
+        csv_bytes = csv_buffer.getvalue().encode("utf-8")
 
-        # ✅ Generate Graph (in-memory)
+        # ✅ Create Graph (PNG)
         img_buffer = io.BytesIO()
         width = max(11, len(df) * 0.8)
         height = 10
@@ -66,18 +63,18 @@ def chat():
         plt.xticks(ticks=x, labels=labels, rotation=45, ha='right')
         plt.tight_layout()
         plt.legend()
-        plt.savefig(img_buffer, format='.png')
+        plt.savefig(img_buffer, format='png')
         plt.close()
-        img_buffer.seek(0)
+        img_bytes = img_buffer.getvalue()
 
-        # ✅ Upload both to Vercel Blob
-        csv_filename = f"{uuid.uuid4().hex}.csv"
-        graph_filename = f"{uuid.uuid4().hex}.png"
+        # ✅ Upload to Vercel Blob (async)
+        csv_filename = f"spotify_csv/{uuid.uuid4().hex}.csv"
+        graph_filename = f"spotify_graphs/{uuid.uuid4().hex}.png"
 
-        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/csv"))
-        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/png"))
+        csv_url = asyncio.run(put(csv_filename, csv_bytes, "text/csv"))
+        graph_url = asyncio.run(put(graph_filename, img_bytes, "image/png"))
 
-        # ✅ Convert DataFrame to HTML
+        # ✅ Generate HTML table
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
 
         return jsonify({
@@ -89,35 +86,6 @@ def chat():
 
     except Exception as e:
         return jsonify({"error": str(e)})
-    
-        # ✅ Upload both to Vercel Blob (properly formatted)
-csv_filename = f"{uuid.uuid4().hex}.csv"
-graph_filename = f"{uuid.uuid4().hex}.png"
-
-# CSV needs bytes
-csv_bytes = csv_buffer.getvalue().encode("utf-8")
-
-# PNG is already bytes
-img_bytes = img_buffer.getvalue()
-
-# Upload with correct content-type and access
-csv_url = asyncio.run(put(
-    f"spotify_csv/{csv_filename}",
-    csv_bytes,
-    content_type="text/csv",
-    access="public"
-))
-
-graph_url = asyncio.run(put(
-    f"spotify_graphs/{graph_filename}",
-    img_bytes,
-    content_type="image/png",
-    access="public"
-))
-
-csv_filename = f"spotify_analysis_{uuid.uuid4().hex[:6]}.csv"
-graph_filename = f"spotify_graph_{uuid.uuid4().hex[:6]}.png"
-
 
 
 if __name__ == '__main__':
