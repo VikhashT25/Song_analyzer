@@ -64,7 +64,7 @@ def chat():
         plt.xticks(ticks=x, labels=labels, rotation=45, ha='right')
         plt.tight_layout()
         plt.legend()
-        plt.savefig(img_buffer, format='png')
+        plt.savefig(img_buffer, format='.png')
         plt.close()
         img_buffer.seek(0)
 
@@ -72,8 +72,8 @@ def chat():
         csv_filename = f"{uuid.uuid4().hex}.csv"
         graph_filename = f"{uuid.uuid4().hex}.png"
 
-        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/csv"))
-        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/png"))
+        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/.csv"))
+        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/.png"))
 
         # ✅ Convert DataFrame to HTML
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
