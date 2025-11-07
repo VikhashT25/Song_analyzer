@@ -4,8 +4,28 @@ import asyncio
 
 VERCEL_BLOB_URL = "https://fbgruph4dru1oifl.public.blob.vercel-storage.com"
 VERCEL_TOKEN = os.getenv("vercel_blob_rw_FBGRUPH4dru1OiFl_KSYSeGnajKDumgbQ7OO8SXXF9cjACv")
+VERCEL_BLOB_API = "https://api.vercel.com/v2/blob"
 
-async def put(path: str, data, content_type: str, access: str = "public"):
+async def put(path: str, data, content_type: str):
+    headers = {
+        "Authorization": f"Bearer {os.getenv('VERCEL_BLOB_READ_WRITE_TOKEN')}",
+        "x-vercel-bucket": os.getenv('VERCEL_BLOB_BUCKET_NAME', 'default'),
+        "Content-Type": content_type,
+        "x-vercel-content-disposition": f'attachment; filename="{os.path.basename(path)}"',
+    }
+
+    async with httpx.AsyncClient() as client:
+        res = await client.put(
+            f"{VERCEL_BLOB_API}/upload?slug={path}",
+            content=data,
+            headers=headers
+        )
+
+    if res.status_code not in (200, 201):
+        raise Exception(f"Blob upload failed ({res.status_code}): {res.text}")
+
+    return res.json().get("url")
+    
     """
     Uploads file data to Vercel Blob correctly as raw binary.
     Returns a working download URL.
