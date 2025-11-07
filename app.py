@@ -22,8 +22,8 @@ def index():
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    
     user_input = request.json.get('message', '').strip()
-
     try:
         # 🎵 Track URL
         if "spotify.com/track" in user_input:
@@ -41,10 +41,13 @@ def chat():
                 "message": "Please send a valid Spotify track or album URL."
             })
 
-        # ✅ Convert to CSV (bytes)
-        csv_buffer = io.StringIO()
-        df.to_csv(csv_buffer, index=False)
+        
+        
+        # --- Convert CSV & PNG to bytes properly ---
         csv_bytes = csv_buffer.getvalue().encode("utf-8")
+        img_bytes = img_buffer.getvalue()
+
+
 
         # ✅ Create Graph (PNG)
         img_buffer = io.BytesIO()
@@ -67,12 +70,12 @@ def chat():
         plt.close()
         img_bytes = img_buffer.getvalue()
 
-        # ✅ Upload to Vercel Blob (async)
+        # --- Upload both to Vercel Blob ---
         csv_filename = f"spotify_csv/{uuid.uuid4().hex}.csv"
-        graph_filename = f"spotify_graphs/{uuid.uuid4().hex}.png"
+        png_filename = f"spotify_graphs/{uuid.uuid4().hex}.png"
 
         csv_url = asyncio.run(put(csv_filename, csv_bytes, "text/csv"))
-        graph_url = asyncio.run(put(graph_filename, img_bytes, "image/png"))
+        graph_url = asyncio.run(put(png_filename, img_bytes, "image/png"))
 
         # ✅ Generate HTML table
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
