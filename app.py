@@ -73,6 +73,10 @@ def chat():
         # --- Upload both to Vercel Blob ---
         csv_bytes = csv_buffer.getvalue().encode("utf-8")
         img_bytes = img_buffer.getvalue()
+        
+        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/csv"))
+        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/png"))
+
 
         csv_url = asyncio.run(put(
             f"spotify_csv/{csv_filename}",
