@@ -71,11 +71,22 @@ def chat():
         img_bytes = img_buffer.getvalue()
 
         # --- Upload both to Vercel Blob ---
-        csv_filename = f"spotify_csv/{uuid.uuid4().hex}.csv"
-        png_filename = f"spotify_graphs/{uuid.uuid4().hex}.png"
+        csv_bytes = csv_buffer.getvalue().encode("utf-8")
+        img_bytes = img_buffer.getvalue()
 
-        csv_url = asyncio.run(put(csv_filename, csv_bytes, "text/csv"))
-        graph_url = asyncio.run(put(png_filename, img_bytes, "image/png"))
+        csv_url = asyncio.run(put(
+            f"spotify_csv/{csv_filename}",
+            csv_bytes,
+            content_type="text/csv",
+            access="public"
+        ))
+
+        graph_url = asyncio.run(put(
+            f"spotify_graphs/{graph_filename}",
+            img_bytes,
+            content_type="image/png",
+            access="public"
+        ))
 
         # ✅ Generate HTML table
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
