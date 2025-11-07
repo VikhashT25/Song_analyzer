@@ -24,6 +24,7 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_input = request.json.get('message', '').strip()
+    
 
     try:
         # --- 🎵 Track URL ---
@@ -41,6 +42,7 @@ def chat():
                 "type": "text",
                 "message": "Please send a Spotify track or album URL."
             })
+            
 
         # ✅ Convert DataFrame to CSV (in-memory)
         csv_buffer = io.StringIO()
@@ -72,8 +74,8 @@ def chat():
         csv_filename = f"{uuid.uuid4().hex}.csv"
         graph_filename = f"{uuid.uuid4().hex}.png"
 
-        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/.csv"))
-        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/.png"))
+        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_buffer.getvalue(), "text/csv"))
+        graph_url = asyncio.run(put(f"spotify_graphs/{graph_filename}", img_buffer.read(), "image/png"))
 
         # ✅ Convert DataFrame to HTML
         table_html = df.to_html(classes='table table-striped table-bordered', index=False)
@@ -87,6 +89,35 @@ def chat():
 
     except Exception as e:
         return jsonify({"error": str(e)})
+    
+        # ✅ Upload both to Vercel Blob (properly formatted)
+csv_filename = f"{uuid.uuid4().hex}.csv"
+graph_filename = f"{uuid.uuid4().hex}.png"
+
+# CSV needs bytes
+csv_bytes = csv_buffer.getvalue().encode("utf-8")
+
+# PNG is already bytes
+img_bytes = img_buffer.getvalue()
+
+# Upload with correct content-type and access
+csv_url = asyncio.run(put(
+    f"spotify_csv/{csv_filename}",
+    csv_bytes,
+    content_type="text/csv",
+    access="public"
+))
+
+graph_url = asyncio.run(put(
+    f"spotify_graphs/{graph_filename}",
+    img_bytes,
+    content_type="image/png",
+    access="public"
+))
+
+csv_filename = f"spotify_analysis_{uuid.uuid4().hex[:6]}.csv"
+graph_filename = f"spotify_graph_{uuid.uuid4().hex[:6]}.png"
+
 
 
 if __name__ == '__main__':
