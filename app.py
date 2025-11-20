@@ -70,7 +70,7 @@ def chat():
         plt.close()
         img_bytes = img_buffer.getvalue()
 
-        # --- Upload both to Vercel Blob ---
+        # -- Upload both to Vercel Blob --
         csv_bytes = csv_buffer.getvalue().encode("utf-8")
         img_bytes = img_buffer.getvalue()
         
