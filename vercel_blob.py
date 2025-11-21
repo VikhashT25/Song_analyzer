@@ -11,6 +11,8 @@ async def put(path: str, data, content_type: str):
         "Authorization": f"Bearer {os.getenv('VERCEL_BLOB_READ_WRITE_TOKEN')}",
         "x-vercel-bucket": os.getenv('VERCEL_BLOB_BUCKET_NAME', 'default'),
         "Content-Type": content_type,
+        "Content-Type": text/csv,
+        "Content-Type": image/png,
         "x-vercel-content-disposition": f'attachment; filename="{os.path.basename(path)}"',
     }
 
@@ -58,7 +60,7 @@ async def put(path: str, data, content_type: str):
         )
 
     if response.status_code not in (200, 201):
-        raise Exception(f"Blob upload failed: {response.status_code} - {response.text}")
+        raise Exception(f"Blob upload failed: {response.status_code} - {response.blob()}")
 
     blob_info = response.json()
     return blob_info.get("url", None)
