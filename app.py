@@ -41,20 +41,13 @@ def chat():
                 "message": "Please send a valid Spotify track or album URL."
             })
 
-        # -----------------------------
-        # Generate CSV Bytes
-        # -----------------------------
-        csv_buffer = io.BytesIO()
-        df.to_csv(csv_buffer, index=False)
-        csv_buffer.seek(0)
-        csv_bytes = csv_buffer.read()
+       # --- Save CSV correctly ---
+csv_buffer = io.StringIO()
+df.to_csv(csv_buffer, index=False)
+csv_bytes = csv_buffer.getvalue().encode("utf-8")
 
-        csv_filename = f"spotify_{uuid.uuid4()}.csv"
-
-        # -----------------------------
-        # Generate Graph Image Bytes
-        # -----------------------------
-        img_buffer = io.BytesIO()
+# --- Save PNG correctly ---
+img_buffer = io.BytesIO()
 
         width = max(11, len(df) * 0.8)
         height = 10
@@ -72,27 +65,27 @@ def chat():
 
         plt.savefig(img_buffer, format="png")
         plt.close()
+        img_bytes = img_buffer.getvalue()
 
         img_buffer.seek(0)
         img_bytes = img_buffer.read()
 
         graph_filename = f"spotify_graph_{uuid.uuid4()}.png"
 
-        # -----------------------------
-        # Upload to Vercel Blob Storage
-        # -----------------------------
-        csv_url = asyncio.run(put(
-            f"spotify_csv/{csv_filename}",
-            csv_bytes,
-            "text/csv"
-        ))
+        # --- Upload correctly ---
+csv_url = asyncio.run(put(
+    f"spotify_csv/{csv_filename}",
+    csv_bytes,
+    content_type="text/csv",
+    access="public"
+))
 
-        graph_url = asyncio.run(put(
-            f"spotify_graphs/{graph_filename}",
-            img_bytes,
-            "image/png"
-        ))
-
+graph_url = asyncio.run(put(
+    f"spotify_graphs/{graph_filename}",
+    img_bytes,                 # MUST be getvalue(), not read()
+    content_type="image/png",
+    access="public"
+))
         # -----------------------------
         # Generate HTML Table
         # -----------------------------
