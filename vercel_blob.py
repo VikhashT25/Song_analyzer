@@ -28,7 +28,7 @@ async def put(path: str, data: bytes, content_type: str, access: str = "public")
 
     async with httpx.AsyncClient(timeout=60) as client:
         res = await client.put(
-            f"{VERCEL_BLOB_API}/upload?slug="{path}",
+            f"{VERCEL_BLOB_API}/upload?slug={os.path.basename(path)}",
             content=data,
             headers=headers
         )
