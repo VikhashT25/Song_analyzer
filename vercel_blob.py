@@ -23,7 +23,7 @@ async def put(path: str, data: bytes, content_type: str, access: str = "public")
         "x-vercel-blob-bucket": BUCKET,
         "x-vercel-blob-content-type": content_type,
         "x-vercel-blob-access": access,
-        "x-vercel-blob-content-disposition": f'attachment; filename="{os.path.basename(path)}"',
+        "x-vercel-blob-content-disposition": f'attachment; filename="{os.path.basename(path)}.png"',
     }
 
     async with httpx.AsyncClient(timeout=60) as client:
