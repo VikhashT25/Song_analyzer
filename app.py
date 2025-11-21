@@ -58,8 +58,8 @@ def chat():
         img_bytes = img_buffer.getvalue()  # CORRECT — use ONLY getvalue()
 
         # -------------------- Upload --------------------
-        csv_url = asyncio.run(put(f"spotify_csv/{csv_filename}", csv_bytes, "text/csv"))
-        png_url = asyncio.run(put(f"spotify_graphs/{img_filename}", img_bytes, "image/png"))
+        csv_url = asyncio.run(put(f"{csv_filename}", csv_bytes, "text/csv"))
+        png_url = asyncio.run(put(f"{img_filename}", img_bytes, "image/png"))
 
         return jsonify({
             "type": "spotify_analysis",
