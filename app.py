@@ -41,13 +41,18 @@ def chat():
                 "message": "Please send a valid Spotify track or album URL."
             })
 
-       # --- Save CSV correctly ---
-csv_buffer = io.StringIO()
-df.to_csv(csv_buffer, index=False)
-csv_bytes = csv_buffer.getvalue().encode("utf-8")
+        # ----------------------
+        # SAVE CSV PROPERLY
+        # ----------------------
+        csv_filename = f"spotify_data_{uuid.uuid4()}.csv"
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_bytes = csv_buffer.getvalue().encode("utf-8")
 
-# --- Save PNG correctly ---
-img_buffer = io.BytesIO()
+        # ----------------------
+        # SAVE PNG PROPERLY
+        # ----------------------
+        img_buffer = io.BytesIO()
 
         width = max(11, len(df) * 0.8)
         height = 10
@@ -65,30 +70,31 @@ img_buffer = io.BytesIO()
 
         plt.savefig(img_buffer, format="png")
         plt.close()
-        img_bytes = img_buffer.getvalue()
 
-        img_buffer.seek(0)
-        img_bytes = img_buffer.read()
+        img_bytes = img_buffer.getvalue()  # << MUST USE THIS
 
         graph_filename = f"spotify_graph_{uuid.uuid4()}.png"
 
-        # --- Upload correctly ---
-csv_url = asyncio.run(put(
-    f"spotify_csv/{csv_filename}",
-    csv_bytes,
-    content_type="text/csv",
-    access="public"
-))
+        # ----------------------
+        # UPLOAD BOTH FILES CORRECTLY
+        # ----------------------
+        csv_url = asyncio.run(put(
+            f"spotify_csv/{csv_filename}",
+            csv_bytes,
+            content_type="text/csv",
+            access="public"
+        ))
 
-graph_url = asyncio.run(put(
-    f"spotify_graphs/{graph_filename}",
-    img_bytes,                 # MUST be getvalue(), not read()
-    content_type="image/png",
-    access="public"
-))
-        # -----------------------------
-        # Generate HTML Table
-        # -----------------------------
+        graph_url = asyncio.run(put(
+            f"spotify_graphs/{graph_filename}",
+            img_bytes,
+            content_type="image/png",
+            access="public"
+        ))
+
+        # ----------------------
+        # GENERATE HTML TABLE
+        # ----------------------
         table_html = df.to_html(
             classes='table table-striped table-bordered',
             index=False
