@@ -22,31 +22,38 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+<<<<<<< HEAD
 
 # -------------------------------
 # Chat Route (ANALYSIS ONLY)
 # -------------------------------
+=======
+>>>>>>> 7b19a6afaa46853502c4ec75b76aa2904c0c05c8
 @app.route('/chat', methods=['POST'])
 def chat():
     user_input = request.json.get('message', '').strip()
 
     try:
+<<<<<<< HEAD
         # 🎵 Track
+=======
+>>>>>>> 7b19a6afaa46853502c4ec75b76aa2904c0c05c8
         if "spotify.com/track" in user_input:
             df = analyze_spotify_url(user_input)
             graph_title = "Spotify Track Metrics"
 
+<<<<<<< HEAD
         # 💿 Album
+=======
+>>>>>>> 7b19a6afaa46853502c4ec75b76aa2904c0c05c8
         elif "spotify.com/album" in user_input:
             df = analyze_spotify_album(user_input)
             graph_title = "Spotify Album Metrics"
 
         else:
-            return jsonify({
-                "type": "text",
-                "message": "Please send a valid Spotify track or album URL."
-            })
+            return jsonify({"type": "text", "message": "Invalid Spotify URL."})
 
+<<<<<<< HEAD
         # ✅ Store data in memory (safe for streaming)
         app.config["LAST_DF"] = df
         app.config["GRAPH_TITLE"] = graph_title
@@ -60,11 +67,45 @@ def chat():
         return jsonify({
             "type": "spotify_analysis",
             "table": table_html
+=======
+        # -------------------- CSV --------------------
+        csv_filename = f"spotify_{uuid.uuid4()}.csv"
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_bytes = csv_buffer.getvalue().encode("utf-8")
+
+        # -------------------- PNG --------------------
+        img_filename = f"spotify_graph_{uuid.uuid4()}.png"
+        img_buffer = io.BytesIO()
+
+        plt.figure(figsize=(12, 6))
+        plt.bar(df.index - 0.2, df["Popularity"], width=0.4, label="Popularity")
+        plt.bar(df.index + 0.2, df["Duration (minutes)"], width=0.4, label="Duration (minutes)")
+        plt.xticks(df.index, df["Track Name"], rotation=45, ha="right")
+        plt.tight_layout()
+        plt.legend()
+
+        plt.savefig(img_buffer, format="png")
+        plt.close()
+
+        img_bytes = img_buffer.getvalue()  # CORRECT — use ONLY getvalue()
+
+        # -------------------- Upload --------------------
+        csv_url = asyncio.run(put(f"{csv_filename}", csv_bytes, "text/csv"))
+        png_url = asyncio.run(put(f"{img_filename}", img_bytes, "image/png"))
+
+        return jsonify({
+            "type": "spotify_analysis",
+            "table": df.to_html(classes="table table-striped", index=False),
+            "download_csv": csv_url,
+            "graph_url": png_url
+>>>>>>> 7b19a6afaa46853502c4ec75b76aa2904c0c05c8
         })
 
     except Exception as e:
         return jsonify({"error": str(e)})
 
+<<<<<<< HEAD
 
 # -------------------------------
 # CSV DOWNLOAD
@@ -132,4 +173,7 @@ def download_graph():
 
 
 if __name__ == '__main__':
+=======
+if __name__ == "__main__":
+>>>>>>> 7b19a6afaa46853502c4ec75b76aa2904c0c05c8
     app.run(debug=True)
